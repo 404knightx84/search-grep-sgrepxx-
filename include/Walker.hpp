@@ -4,9 +4,7 @@
 #include <filesystem>
 #include <functional>
 
-// A callback invoked once per file that passes the -name/-type filters.
-// std::function lets main.cpp pass a lambda instead of a raw function
-// pointer, so it can capture state (like the Matcher) without globals.
+
 using FileVisitor = std::function<void(const std::filesystem::path&)>;
 
 class Walker {
