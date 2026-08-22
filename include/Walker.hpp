@@ -11,8 +11,7 @@ class Walker {
 public:
     explicit Walker(const Config& cfg);
 
-    // Walks cfg.path (recursively, if it's a directory and cfg.recursive
-    // is set), calling visitor for every entry that passes the filters.
+
     void walk(const FileVisitor& visitor) const;
 
 private:
