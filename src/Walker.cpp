@@ -22,3 +22,18 @@ bool Walker::passes_filters(const fs::path& p, bool is_dir) const {
     }
     return true;
 }
+
+void Walker::walk(const FileVisitor& visitor) const {
+    fs::path root(cfg_.path);
+
+    std::error_code ec;
+    if (!fs::exists(root, ec)) {
+        std::cerr << "sgrepxx: path does not exist: " << cfg_.path << "\n";
+        return;
+    }
+
+    // Single file (not a directory): just check it directly.
+    if (fs::is_regular_file(root, ec)) {
+        if (passes_filters(root, false)) visitor(root);
+        return;
+    }
