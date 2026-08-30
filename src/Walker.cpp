@@ -37,3 +37,14 @@ void Walker::walk(const FileVisitor& visitor) const {
         if (passes_filters(root, false)) visitor(root);
         return;
     }
+    if (!fs::is_directory(root, ec)) return;
+
+    // recursive_directory_iterator does exactly what walk_recursive()
+    // did by hand in the C version (opendir/readdir/recurse), but as
+    // one line, with RAII cleanup guaranteed even if an exception is
+    // thrown partway through.
+    //
+    // skip_permission_denied means one unreadable subdirectory doesn't
+    // crash the whole walk -- it just gets skipped, matching how real
+    // `find`/`grep -r` behave.
+    auto opts = fs::directory_options::skip_permission_denied;
