@@ -9,3 +9,7 @@ Matcher::Matcher(std::string pattern, bool case_insensitive)
 char Matcher::normalize(char c, bool ci) {
     return ci ? static_cast<char>(std::tolower(static_cast<unsigned char>(c))) : c;
 }
+
+std::vector<int> Matcher::build_lps() const {
+    const int m = static_cast<int>(pattern_.size());
+    std::vector<int> lps(m, 0);
