@@ -34,3 +34,22 @@ std::vector<int> Matcher::build_lps() const {
 bool Matcher::contains(const std::string& text) const {
     const int n = static_cast<int>(text.size());
     const int m = static_cast<int>(pattern_.size());
+
+    if (m == 0) return true;
+    if (m > n) return false;
+
+    int i = 0, j = 0;
+    while (i < n) {
+        if (normalize(text[i], case_insensitive_) == normalize(pattern_[j], case_insensitive_)) {
+            i++;
+            j++;
+            if (j == m) return true;
+        } else if (j != 0) {
+            j = lps_[j - 1];
+        } else {
+            i++;
+        }
+    }
+    return false;
+}
+
