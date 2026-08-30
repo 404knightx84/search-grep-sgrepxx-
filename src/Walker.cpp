@@ -57,4 +57,13 @@ void Walker::walk(const FileVisitor& visitor) const {
                 if (!is_dir || cfg_.type_filter == 'd') visitor(entry.path());
             }
         }
-    } 
+    } else {
+        for (const auto& entry : fs::directory_iterator(root, opts, ec)) {
+            bool is_dir = entry.is_directory(ec);
+            if (passes_filters(entry.path(), is_dir)) {
+                if (!is_dir || cfg_.type_filter == 'd') visitor(entry.path());
+            }
+        }
+    }
+}
+
