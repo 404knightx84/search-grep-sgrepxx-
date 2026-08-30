@@ -9,6 +9,7 @@ Walker::Walker(const Config& cfg) : cfg_(cfg) {}
 bool Walker::passes_filters(const fs::path& p, bool is_dir) const {
     if (cfg_.type_filter == 'f' && is_dir) return false;
     if (cfg_.type_filter == 'd' && !is_dir) return false;
+
     if (cfg_.name_filter) {
         // std::filesystem gives us the filename directly -- no manual
         // strrchr('/') hunting like the C version needed.
@@ -37,6 +38,7 @@ void Walker::walk(const FileVisitor& visitor) const {
         if (passes_filters(root, false)) visitor(root);
         return;
     }
+
     if (!fs::is_directory(root, ec)) return;
 
     // recursive_directory_iterator does exactly what walk_recursive()
@@ -66,4 +68,3 @@ void Walker::walk(const FileVisitor& visitor) const {
         }
     }
 }
-
