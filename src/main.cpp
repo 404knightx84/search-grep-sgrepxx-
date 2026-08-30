@@ -16,6 +16,7 @@ static void search_file(const std::filesystem::path& path, const Config& cfg, co
         std::cerr << "sgrepxx: cannot open '" << path.string() << "'\n";
         return;
     }
+
     std::string line;
     int line_no = 0;
 
@@ -27,6 +28,7 @@ static void search_file(const std::filesystem::path& path, const Config& cfg, co
                 std::cout << path.string() << "\n";
                 return; // no need to keep scanning this file
             }
+
             if (cfg.show_line_numbers) {
                 std::cout << path.string() << ":" << line_no << ":" << line << "\n";
             } else {
@@ -34,4 +36,27 @@ static void search_file(const std::filesystem::path& path, const Config& cfg, co
             }
         }
     }
+}
+
+int main(int argc, char* argv[]) {
+    Config cfg;
+    try {
+        cfg = parse_args(argc, argv);
+    } catch (const std::exception& e) {
+        std::cerr << "sgrepxx: " << e.what() << "\n";
+        print_usage(argc > 0 ? argv[0] : "sgrepxx");
+        return 1;
+    }
+
+    Matcher matcher(cfg.pattern, cfg.case_insensitive);
+    Walker walker(cfg);
+
+    // A lambda closure lets us pass `cfg` and `matcher` into the visitor
+    // without global variables -- something the C version couldn't do
+    // cleanly with a plain function pointer callback.
+    walker.walk([&](const std::filesystem::path& path) {
+        search_file(path, cfg, matcher);
+    });
+
+    return 0;
 }
