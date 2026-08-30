@@ -48,3 +48,13 @@ void Walker::walk(const FileVisitor& visitor) const {
     // crash the whole walk -- it just gets skipped, matching how real
     // `find`/`grep -r` behave.
     auto opts = fs::directory_options::skip_permission_denied;
+
+    if (cfg_.recursive) {
+        for (const auto& entry : fs::recursive_directory_iterator(root, opts, ec)) {
+            bool is_dir = entry.is_directory(ec);
+            if (passes_filters(entry.path(), is_dir)) {
+                if (is_dir && cfg_.type_filter != 'd') continue; // skip dirs unless -type d
+                if (!is_dir || cfg_.type_filter == 'd') visitor(entry.path());
+            }
+        }
+    } 
