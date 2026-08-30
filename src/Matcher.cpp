@@ -30,3 +30,7 @@ std::vector<int> Matcher::build_lps() const {
     }
     return lps;
 }
+
+bool Matcher::contains(const std::string& text) const {
+    const int n = static_cast<int>(text.size());
+    const int m = static_cast<int>(pattern_.size());
