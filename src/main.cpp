@@ -16,3 +16,14 @@ static void search_file(const std::filesystem::path& path, const Config& cfg, co
         std::cerr << "sgrepxx: cannot open '" << path.string() << "'\n";
         return;
     }
+    std::string line;
+    int line_no = 0;
+
+    while (std::getline(file, line)) {
+        line_no++;
+
+        if (matcher.contains(line)) {
+            if (cfg.filenames_only) {
+                std::cout << path.string() << "\n";
+                return; // no need to keep scanning this file
+            }
