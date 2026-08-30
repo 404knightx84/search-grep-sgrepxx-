@@ -56,3 +56,10 @@ Config parse_args(int argc, char* argv[]) {
             positionals.push_back(a);
         }
     }
+    if (positionals.empty()) throw std::runtime_error("missing PATTERN");
+
+    cfg.pattern = positionals[0];
+    if (positionals.size() == 2) cfg.path = positionals[1];
+
+    return cfg;
+}
