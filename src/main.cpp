@@ -27,3 +27,11 @@ static void search_file(const std::filesystem::path& path, const Config& cfg, co
                 std::cout << path.string() << "\n";
                 return; // no need to keep scanning this file
             }
+            if (cfg.show_line_numbers) {
+                std::cout << path.string() << ":" << line_no << ":" << line << "\n";
+            } else {
+                std::cout << path.string() << ":" << line << "\n";
+            }
+        }
+    }
+}
